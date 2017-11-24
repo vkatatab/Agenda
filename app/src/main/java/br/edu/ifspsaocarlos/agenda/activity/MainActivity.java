@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = getIntent();
         handleIntent(intent);
 
-        cDAO= new ContatoDAO(this);
+        cDAO = new ContatoDAO(this);
 
         empty= (TextView) findViewById(R.id.empty_view);
 
@@ -200,14 +201,19 @@ public class MainActivity extends AppCompatActivity{
 
     private void setupRecyclerView() {
 
-
         adapter.setClickListener(new ContatoAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position, Boolean favorite) {
                 final Contato contato = contatos.get(position);
-                Intent i = new Intent(getApplicationContext(), DetalheActivity.class);
-                i.putExtra("contato", contato);
-                startActivityForResult(i, 2);
+                if (!favorite) {
+                    Intent i = new Intent(getApplicationContext(), DetalheActivity.class);
+                    i.putExtra("contato", contato);
+                    startActivityForResult(i, 2);
+                } else {
+                    contato.toggleFavorite();
+                    cDAO.salvaContato(contato);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
             }
         });
 

@@ -2,9 +2,11 @@ package br.edu.ifspsaocarlos.agenda.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.edu.ifspsaocarlos.agenda.model.Contato;
@@ -37,6 +39,13 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
     public void onBindViewHolder(ContatoViewHolder holder, int position) {
         Contato contato  = contatos.get(position) ;
         holder.nome.setText(contato.getNome());
+        int image = 0;
+        if (contato.getFavorite() == 0) {
+            image = R.drawable.off_star;
+        } else {
+            image = R.drawable.on_star;
+        }
+        holder.favorite.setImageResource(image);
     }
 
     @Override
@@ -50,26 +59,31 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
     }
 
 
-    public  class ContatoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ContatoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         final TextView nome;
+        final ImageView favorite;
 
         ContatoViewHolder(View view) {
             super(view);
             nome = (TextView)view.findViewById(R.id.nome);
+            favorite = (ImageView)view.findViewById(R.id.favorite);
             view.setOnClickListener(this);
+            favorite.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
-            if (clickListener != null)
-                clickListener.onItemClick(getAdapterPosition());
+            if (view == favorite) {
+                clickListener.onItemClick(getAdapterPosition(), true);
+            } else if (clickListener != null) {
+                clickListener.onItemClick(getAdapterPosition(), false);
+            }
         }
     }
 
 
     public interface ItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, Boolean favorite);
     }
 
 }

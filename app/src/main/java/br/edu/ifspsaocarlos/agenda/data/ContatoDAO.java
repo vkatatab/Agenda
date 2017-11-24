@@ -5,6 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
+
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ public class ContatoDAO {
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL};
+        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITE};
 
         cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, null , null,
                 null, null, SQLiteHelper.KEY_NAME);
@@ -37,6 +40,7 @@ public class ContatoDAO {
             contato.setNome(cursor.getString(1));
             contato.setFone(cursor.getString(2));
             contato.setEmail(cursor.getString(3));
+            contato.setFavorite(Integer.parseInt(cursor.getString(4)));
             contatos.add(contato);
 
 
@@ -87,6 +91,7 @@ public class ContatoDAO {
         values.put(SQLiteHelper.KEY_NAME, c.getNome());
         values.put(SQLiteHelper.KEY_FONE, c.getFone());
         values.put(SQLiteHelper.KEY_EMAIL, c.getEmail());
+        values.put(SQLiteHelper.KEY_FAVORITE, c.getFavorite());
 
        if (c.getId()>0)
           database.update(SQLiteHelper.DATABASE_TABLE, values, SQLiteHelper.KEY_ID + "="

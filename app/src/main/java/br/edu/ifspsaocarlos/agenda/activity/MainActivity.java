@@ -154,12 +154,9 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-
-
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setIconifiedByDefault(true);
-
 
         return true;
     }
@@ -197,6 +194,7 @@ public class MainActivity extends AppCompatActivity{
         contatos.clear();
 
         if (nomeContato == null) {
+            this.query = null;
             contatos.addAll(cDAO.buscaTodosContatos(this.favorite));
             empty.setText(getResources().getString(R.string.lista_vazia));
             fab.setVisibility(View.VISIBLE);

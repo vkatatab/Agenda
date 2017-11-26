@@ -21,7 +21,7 @@ public class ContatoDAO {
         this.dbHelper=new SQLiteHelper(context);
     }
 
-    public  List<Contato> buscaTodosContatos()
+    public  List<Contato> buscaTodosContatos(boolean favorite)
     {
         database=dbHelper.getReadableDatabase();
         List<Contato> contatos = new ArrayList<>();
@@ -30,7 +30,12 @@ public class ContatoDAO {
 
         String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITE};
 
-        cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, null , null,
+        String where = "";
+        if (favorite) {
+            where += SQLiteHelper.KEY_FAVORITE +" = 1";
+        }
+
+        cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, where , null,
                 null, null, SQLiteHelper.KEY_NAME);
 
         while (cursor.moveToNext())
@@ -42,8 +47,6 @@ public class ContatoDAO {
             contato.setEmail(cursor.getString(3));
             contato.setFavorite(Integer.parseInt(cursor.getString(4)));
             contatos.add(contato);
-
-
         }
         cursor.close();
 
@@ -52,15 +55,18 @@ public class ContatoDAO {
         return contatos;
     }
 
-    public  List<Contato> buscaContato(String nome)
+    public  List<Contato> buscaContato(String nome, boolean favorite)
     {
         database=dbHelper.getReadableDatabase();
         List<Contato> contatos = new ArrayList<>();
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL};
+        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITE};
         String where=SQLiteHelper.KEY_NAME + " like ?";
+        if (favorite) {
+            where += " AND "+ SQLiteHelper.KEY_FAVORITE +" = 1";
+        }
         String[] argWhere=new String[]{nome + "%"};
 
 
@@ -75,6 +81,7 @@ public class ContatoDAO {
             contato.setNome(cursor.getString(1));
             contato.setFone(cursor.getString(2));
             contato.setEmail(cursor.getString(3));
+            contato.setFavorite(Integer.parseInt(cursor.getString(4)));
             contatos.add(contato);
 
 

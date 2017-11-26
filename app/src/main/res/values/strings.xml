@@ -13,6 +13,9 @@
     <string name="contato_adicionado">Contato adicionado</string>
     <string name="contato_alterado">Informações do contato alteradas</string>
     <string name="contato_apagado">Contato removido</string>
+    <string name="red">red</string>
+    <string name="blue">blue</string>
+    <string name="favorite">Favoritos</string>
 </resources>
 
 

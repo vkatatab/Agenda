@@ -7,5 +7,9 @@
         android:title="@string/nome_do_contato"
         app:actionViewClass="android.support.v7.widget.SearchView"
         />
+    <group android:checkableBehavior="all">
+        <item android:id="@+id/favorite"
+            android:title="@string/favorite" />
+    </group>
 </menu>
 

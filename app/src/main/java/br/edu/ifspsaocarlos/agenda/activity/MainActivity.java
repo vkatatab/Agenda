@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity{
 
     private FloatingActionButton fab;
 
+    private Boolean favorite;
+    private String query;
+
     @Override
     public void onBackPressed() {
         if (!searchView.isIconified()) {
@@ -68,9 +72,9 @@ public class MainActivity extends AppCompatActivity{
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            this.query = intent.getStringExtra(SearchManager.QUERY);
             searchView.clearFocus();
-            updateUI(query);
+            updateUI(this.query);
 
         }
     }
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        favorite = false;
 
         Intent intent = getIntent();
         handleIntent(intent);
@@ -112,6 +117,23 @@ public class MainActivity extends AppCompatActivity{
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.favorite:
+                if (item.isChecked()) {
+                    this.favorite = false;
+                } else {
+                    this.favorite = true;
+                }
+                item.setChecked(this.favorite);
+                updateUI(this.query);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
@@ -119,7 +141,6 @@ public class MainActivity extends AppCompatActivity{
         searchView = (SearchView) menu.findItem(R.id.pesqContato).getActionView();
 
         ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
-
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,8 +173,6 @@ public class MainActivity extends AppCompatActivity{
                 updateUI(null);
             }
 
-
-
         if (requestCode == 2) {
             if (resultCode == RESULT_OK)
                 showSnackBar(getResources().getString(R.string.contato_alterado));
@@ -175,19 +194,16 @@ public class MainActivity extends AppCompatActivity{
 
     private void updateUI(String nomeContato)
     {
-
         contatos.clear();
 
-        if (nomeContato==null) {
-            contatos.addAll(cDAO.buscaTodosContatos());
+        if (nomeContato == null) {
+            contatos.addAll(cDAO.buscaTodosContatos(this.favorite));
             empty.setText(getResources().getString(R.string.lista_vazia));
             fab.setVisibility(View.VISIBLE);
-        }
-        else {
-            contatos.addAll(cDAO.buscaContato(nomeContato));
+        } else {
+            contatos.addAll(cDAO.buscaContato(nomeContato, this.favorite));
             empty.setText(getResources().getString(R.string.contato_nao_encontrado));
             fab.setVisibility(View.GONE);
-
         }
 
         recyclerView.getAdapter().notifyDataSetChanged();
@@ -213,6 +229,7 @@ public class MainActivity extends AppCompatActivity{
                     contato.toggleFavorite();
                     cDAO.salvaContato(contato);
                     recyclerView.getAdapter().notifyDataSetChanged();
+                    updateUI(null);
                 }
             }
         });
@@ -235,7 +252,6 @@ public class MainActivity extends AppCompatActivity{
                     updateUI(null);
                 }
             }
-
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {

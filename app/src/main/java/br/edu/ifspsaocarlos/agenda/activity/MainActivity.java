@@ -35,7 +35,6 @@ import br.edu.ifspsaocarlos.agenda.adapter.ContatoAdapter;
 import br.edu.ifspsaocarlos.agenda.data.ContatoDAO;
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 
-
 public class MainActivity extends AppCompatActivity{
 
     private ContatoDAO cDAO ;
@@ -187,8 +186,6 @@ public class MainActivity extends AppCompatActivity{
                 .show();
     }
 
-
-
     private void updateUI(String nomeContato)
     {
         contatos.clear();
@@ -272,12 +269,9 @@ public class MainActivity extends AppCompatActivity{
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
-
-
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
 
     }
 

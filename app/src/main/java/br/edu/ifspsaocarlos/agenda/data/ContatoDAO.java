@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import br.edu.ifspsaocarlos.agenda.model.Contato;
+
+import java.sql.SQLInput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,14 @@ public class ContatoDAO {
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITE};
+        String[] cols=new String[] {
+            SQLiteHelper.KEY_ID,
+            SQLiteHelper.KEY_NAME,
+            SQLiteHelper.KEY_FONE,
+            SQLiteHelper.KEY_EMAIL,
+            SQLiteHelper.KEY_FAVORITE,
+            SQLiteHelper.KEY_FONE_SECONDARY
+        };
 
         String where = "";
         if (favorite) {
@@ -46,6 +55,7 @@ public class ContatoDAO {
             contato.setFone(cursor.getString(2));
             contato.setEmail(cursor.getString(3));
             contato.setFavorite(Integer.parseInt(cursor.getString(4)));
+            contato.setFoneSecondary(cursor.getString(5));
             contatos.add(contato);
         }
         cursor.close();
@@ -62,7 +72,14 @@ public class ContatoDAO {
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITE};
+        String[] cols=new String[] {
+                SQLiteHelper.KEY_ID,
+                SQLiteHelper.KEY_NAME,
+                SQLiteHelper.KEY_FONE,
+                SQLiteHelper.KEY_EMAIL,
+                SQLiteHelper.KEY_FAVORITE,
+                SQLiteHelper.KEY_FONE_SECONDARY
+        };
         String where=SQLiteHelper.KEY_NAME + " like ?";
         if (favorite) {
             where += " AND "+ SQLiteHelper.KEY_FAVORITE +" = 1";
@@ -82,8 +99,8 @@ public class ContatoDAO {
             contato.setFone(cursor.getString(2));
             contato.setEmail(cursor.getString(3));
             contato.setFavorite(Integer.parseInt(cursor.getString(4)));
+            contato.setFoneSecondary(cursor.getString(5));
             contatos.add(contato);
-
 
         }
         cursor.close();
@@ -99,6 +116,7 @@ public class ContatoDAO {
         values.put(SQLiteHelper.KEY_FONE, c.getFone());
         values.put(SQLiteHelper.KEY_EMAIL, c.getEmail());
         values.put(SQLiteHelper.KEY_FAVORITE, c.getFavorite());
+        values.put(SQLiteHelper.KEY_FONE_SECONDARY, c.getFoneSecondary());
 
        if (c.getId()>0)
           database.update(SQLiteHelper.DATABASE_TABLE, values, SQLiteHelper.KEY_ID + "="

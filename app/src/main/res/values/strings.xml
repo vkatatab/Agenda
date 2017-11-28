@@ -16,6 +16,7 @@
     <string name="red">red</string>
     <string name="blue">blue</string>
     <string name="favorite">Favoritos</string>
+    <string name="foneSecondary">Telefone secundario</string>
 </resources>
 
 

@@ -7,6 +7,7 @@ public class Contato implements Serializable{
     private long id;
     private String nome;
     private String fone;
+    private String fone_secondary;
     private String email;
     private long favorite;
 
@@ -32,6 +33,8 @@ public class Contato implements Serializable{
     public void setFone(String fone) {
         this.fone = fone;
     }
+    public String getFoneSecondary() { return fone_secondary; }
+    public void setFoneSecondary(String fone) { this.fone_secondary = fone; }
     public String getEmail() {
         return email;
     }

@@ -9,6 +9,7 @@ public class Contato implements Serializable{
     private String fone;
     private String fone_secondary;
     private String email;
+    private String birthdate;
     private long favorite;
 
     public Contato()
@@ -45,6 +46,12 @@ public class Contato implements Serializable{
     public void setFavorite(long favorite) { this.favorite = favorite; }
     public void toggleFavorite() {
         favorite ^= 1;
+    }
+    public String getBirthdate() {
+        return birthdate;
+    }
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 }
 

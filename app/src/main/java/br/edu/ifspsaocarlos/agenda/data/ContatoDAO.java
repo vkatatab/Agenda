@@ -36,7 +36,8 @@ public class ContatoDAO {
             SQLiteHelper.KEY_FONE,
             SQLiteHelper.KEY_EMAIL,
             SQLiteHelper.KEY_FAVORITE,
-            SQLiteHelper.KEY_FONE_SECONDARY
+            SQLiteHelper.KEY_FONE_SECONDARY,
+            SQLiteHelper.KEY_BIRTHDATE
         };
 
         String where = "";
@@ -56,6 +57,7 @@ public class ContatoDAO {
             contato.setEmail(cursor.getString(3));
             contato.setFavorite(Integer.parseInt(cursor.getString(4)));
             contato.setFoneSecondary(cursor.getString(5));
+            contato.setBirthdate(cursor.getString(6));
             contatos.add(contato);
         }
         cursor.close();
@@ -78,13 +80,14 @@ public class ContatoDAO {
                 SQLiteHelper.KEY_FONE,
                 SQLiteHelper.KEY_EMAIL,
                 SQLiteHelper.KEY_FAVORITE,
-                SQLiteHelper.KEY_FONE_SECONDARY
+                SQLiteHelper.KEY_FONE_SECONDARY,
+                SQLiteHelper.KEY_BIRTHDATE
         };
-        String where=SQLiteHelper.KEY_NAME + " like ?";
+        String where=SQLiteHelper.KEY_NAME + " like ? OR " + SQLiteHelper.KEY_EMAIL + " like ?";
         if (favorite) {
             where += " AND "+ SQLiteHelper.KEY_FAVORITE +" = 1";
         }
-        String[] argWhere=new String[]{nome + "%"};
+        String[] argWhere=new String[]{nome + "%", "%" + nome + "%"};
 
 
         cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, where , argWhere,
@@ -100,6 +103,7 @@ public class ContatoDAO {
             contato.setEmail(cursor.getString(3));
             contato.setFavorite(Integer.parseInt(cursor.getString(4)));
             contato.setFoneSecondary(cursor.getString(5));
+            contato.setBirthdate(cursor.getString(6));
             contatos.add(contato);
 
         }
@@ -117,6 +121,7 @@ public class ContatoDAO {
         values.put(SQLiteHelper.KEY_EMAIL, c.getEmail());
         values.put(SQLiteHelper.KEY_FAVORITE, c.getFavorite());
         values.put(SQLiteHelper.KEY_FONE_SECONDARY, c.getFoneSecondary());
+        values.put(SQLiteHelper.KEY_BIRTHDATE, c.getBirthdate());
 
        if (c.getId()>0)
           database.update(SQLiteHelper.DATABASE_TABLE, values, SQLiteHelper.KEY_ID + "="

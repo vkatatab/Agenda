@@ -10,9 +10,10 @@ class SQLiteHelper extends SQLiteOpenHelper {
     static final String KEY_NAME = "nome";
     static final String KEY_FONE = "fone";
     static final String KEY_FONE_SECONDARY = "fone_secondary";
+    static final String KEY_BIRTHDATE = "birthdate";
     static final String KEY_EMAIL = "email";
     static final String KEY_FAVORITE = "favorite";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_CREATE = "CREATE TABLE "+ DATABASE_TABLE +" (" +
             KEY_ID  +  " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_NAME + " TEXT NOT NULL, " +
@@ -36,6 +37,9 @@ class SQLiteHelper extends SQLiteOpenHelper {
         if (oldVersion < 3) {
             this.upgradeToVersion3(database);
         }
+        if (oldVersion < 4) {
+            this.upgradeToVersion4(database);
+        }
     }
 
     private void upgradeToVersion2(SQLiteDatabase database) {
@@ -44,6 +48,10 @@ class SQLiteHelper extends SQLiteOpenHelper {
 
     private void upgradeToVersion3(SQLiteDatabase database) {
         database.execSQL("ALTER TABLE "+ DATABASE_TABLE +" ADD COLUMN "+ KEY_FONE_SECONDARY +" TEXT");
+    }
+
+    private void upgradeToVersion4(SQLiteDatabase database) {
+        database.execSQL("ALTER TABLE "+ DATABASE_TABLE +" ADD COLUMN "+ KEY_BIRTHDATE +" TEXT");
     }
 }
 

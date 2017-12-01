@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,7 +25,7 @@ public class DetalheActivity extends AppCompatActivity implements View.OnClickLi
     private Contato c;
     private ContatoDAO cDAO;
 
-    private EditText button;
+    private EditText birthdateText;
     private final int DATEPICKER_ID = 999;
 
     @Override
@@ -47,8 +46,9 @@ public class DetalheActivity extends AppCompatActivity implements View.OnClickLi
             EditText foneSecondaryText = (EditText)findViewById(R.id.editTextFoneSecondary);
             foneSecondaryText.setText(c.getFoneSecondary());
             EditText emailText = (EditText)findViewById(R.id.editTextEmail);
-            button = (EditText)findViewById(R.id.editTextBirthdate);
-            button.setOnClickListener(this);
+            birthdateText = (EditText)findViewById(R.id.editTextBirthdate);
+            birthdateText.setText(c.getBirthdate());
+            birthdateText.setOnClickListener(this);
             emailText.setText(c.getEmail());
             int pos =c.getNome().indexOf(" ");
             if (pos==-1)
@@ -61,9 +61,13 @@ public class DetalheActivity extends AppCompatActivity implements View.OnClickLi
     protected Dialog onCreateDialog(int id) {
         Calendar calendario = Calendar.getInstance();
 
-        int ano = calendario.get(Calendar.YEAR);
-        int mes = calendario.get(Calendar.MONTH);
-        int dia = calendario.get(Calendar.DAY_OF_MONTH);
+        String data = birthdateText.getText().toString();
+        String array[] = new String[3];
+        array = data.split("/");
+
+        int ano = Integer.valueOf(array[2]);
+        int mes = Integer.valueOf(array[1])-1;
+        int dia = Integer.valueOf(array[0]);
 
         switch (id) {
             case DATEPICKER_ID:
@@ -76,17 +80,15 @@ public class DetalheActivity extends AppCompatActivity implements View.OnClickLi
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            String data = String.valueOf(dayOfMonth) + " /"
-                    + String.valueOf(monthOfYear+1) + " /" + String.valueOf(year);
-            Toast.makeText(DetalheActivity.this,
-                    "DATA = " + data, Toast.LENGTH_SHORT)
-                    .show();
+            String data = String.valueOf(dayOfMonth) + "/"
+                    + String.valueOf(monthOfYear+1) + "/" + String.valueOf(year);
+            birthdateText.setText(data);
         }
     };
 
     @Override
     public void onClick(View v) {
-        if (v == button) {
+        if (v == birthdateText) {
             showDialog(DATEPICKER_ID);
         }
     }
@@ -131,6 +133,8 @@ public class DetalheActivity extends AppCompatActivity implements View.OnClickLi
         String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
         String foneSecondary = ((EditText) findViewById(R.id.editTextFoneSecondary)).getText().toString();
         String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
+        String birthdate = ((EditText) findViewById(R.id.editTextBirthdate)).getText().toString();
+
 
         if (c==null)
             c = new Contato();
@@ -139,6 +143,7 @@ public class DetalheActivity extends AppCompatActivity implements View.OnClickLi
         c.setFone(fone);
         c.setFoneSecondary(foneSecondary);
         c.setEmail(email);
+        c.setBirthdate(birthdate);
 
         cDAO.salvaContato(c);
         Intent resultIntent = new Intent();

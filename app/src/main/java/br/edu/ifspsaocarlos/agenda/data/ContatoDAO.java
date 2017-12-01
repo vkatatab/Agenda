@@ -48,6 +48,7 @@ public class ContatoDAO {
         cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, where , null,
                 null, null, SQLiteHelper.KEY_NAME);
 
+
         while (cursor.moveToNext())
         {
             Contato contato = new Contato();

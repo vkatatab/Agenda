@@ -1,21 +1,33 @@
 package br.edu.ifspsaocarlos.agenda.activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 import br.edu.ifspsaocarlos.agenda.data.ContatoDAO;
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 import br.edu.ifspsaocarlos.agenda.R;
 
 
-public class DetalheActivity extends AppCompatActivity {
+public class DetalheActivity extends AppCompatActivity implements View.OnClickListener {
     private Contato c;
     private ContatoDAO cDAO;
+
+    private EditText button;
+    private final int DATEPICKER_ID = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +47,8 @@ public class DetalheActivity extends AppCompatActivity {
             EditText foneSecondaryText = (EditText)findViewById(R.id.editTextFoneSecondary);
             foneSecondaryText.setText(c.getFoneSecondary());
             EditText emailText = (EditText)findViewById(R.id.editTextEmail);
+            button = (EditText)findViewById(R.id.editTextBirthdate);
+            button.setOnClickListener(this);
             emailText.setText(c.getEmail());
             int pos =c.getNome().indexOf(" ");
             if (pos==-1)
@@ -42,6 +56,39 @@ public class DetalheActivity extends AppCompatActivity {
             setTitle(c.getNome().substring(0,pos));
         }
         cDAO = new ContatoDAO(this);
+    }
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Calendar calendario = Calendar.getInstance();
+
+        int ano = calendario.get(Calendar.YEAR);
+        int mes = calendario.get(Calendar.MONTH);
+        int dia = calendario.get(Calendar.DAY_OF_MONTH);
+
+        switch (id) {
+            case DATEPICKER_ID:
+                return new DatePickerDialog(this, mDateSetListener, ano, mes,
+                        dia);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            String data = String.valueOf(dayOfMonth) + " /"
+                    + String.valueOf(monthOfYear+1) + " /" + String.valueOf(year);
+            Toast.makeText(DetalheActivity.this,
+                    "DATA = " + data, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    };
+
+    @Override
+    public void onClick(View v) {
+        if (v == button) {
+            showDialog(DATEPICKER_ID);
+        }
     }
 
     @Override

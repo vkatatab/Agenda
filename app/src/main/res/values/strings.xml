@@ -17,6 +17,7 @@
     <string name="blue">blue</string>
     <string name="favorite">Favoritos</string>
     <string name="foneSecondary">Telefone secundario</string>
+    <string name="birthdate">Data de nascimento</string>
 </resources>
 
 
